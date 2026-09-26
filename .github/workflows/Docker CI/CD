@@ -1,5 +1,5 @@
 ```yaml
-name: Docker CI/CD
+name: Docker CI/CD Test
 
 on:
   push:
