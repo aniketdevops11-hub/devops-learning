@@ -1,11 +1,8 @@
-
+```yaml
 name: Docker CI/CD
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -20,25 +17,12 @@ jobs:
       - name: Build Docker image
         run: docker build -t devops-website:latest .
 
-      - name: Test Docker container
-        run: |
-          docker rm -f test-container 2>/dev/null || true
-          docker run -d --name test-container -p 8082:80 devops-website:latest
-          sleep 5
-          curl --fail http://localhost:8082
-          docker rm -f test-container
-
-      - name: Deploy application
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Deploy Docker container
         run: |
           docker rm -f devops-website-container 2>/dev/null || true
-          docker run -d \
-            --name devops-website-container \
-            -p 8081:80 \
-            devops-website:latest
+          docker run -d --name devops-website-container -p 8081:80 devops-website:latest
 
-      - name: Verify deployment
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Verify website
         run: |
           sleep 5
           curl --fail http://localhost:8081
